@@ -1,0 +1,137 @@
+{% extends "base1.html" %}
+{% load static %}
+
+{% block title %}New Word{% endblock %}
+
+{% block content %}
+  
+  <!DOCTYPE html>
+  <html lang="en">
+    <head></head>
+    <body>
+      <link rel="stylesheet" href="{% static 'styles\general\general.css' %}" />
+      <link rel="stylesheet" href="{% static 'styles\new_word\new_word.css' %}" />
+      <div class="outer_most">
+        <h1 class="header">Add vocabulary</h1>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    
+    
+        <form method="post" id="wordform" class="form-style">
+            
+            {% csrf_token %}
+            {{ formset.management_form }}
+            
+        
+            <div id="formset-container">
+                {% for form in formset %} 
+                <div class="card">
+                    <div class="formset-form">
+                        <div class="language box">
+                            <p>Original Language: {{form.or_lan}}</p>
+                            <p>Original Word: </p> {{form.ori_word}}
+                        </div>
+                        <div class="translation box">
+                            <p>New Language: {{form.ne_lan}}</p>
+                            <p>Translated Word: </p> {{form.trans_word}}
+                        </div>
+                        
+                            
+                    </div>
+                    <h1></h1>
+                    <div class="del">
+                        <button type="button" class="delete-form-btn btn btn-danger">Delete</button> 
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type='button' id="add-form-btn" class="btn btn-success bottom_button"> Add another </button>
+            <input type="submit" value="Submit" class="btn btn-primary bottom_button">
+        </form>
+        {% comment %} <button type='button' id="add-form-btn" class="btn btn-success bottom_button"> Add another </button>
+        <input type="submit" value="Submit" class="btn btn-primary bottom_button"> {% endcomment %}
+    
+
+
+        <script id="empty-form-template" type="text/template">
+    
+            <div class="card">
+                <div class="formset-form">
+                    <div class="language box">
+                        <p>Original Language: {{formset.empty_form.or_lan}}</p>
+                        <p>Original Word: </p> {{formset.empty_form.ori_word}}
+                    </div>
+                    <div class="translation box">
+                        <p>New Language: {{formset.empty_form.ne_lan}}</p>
+                        <p>Translated Word: </p> {{formset.empty_form.trans_word}}
+                    </div>
+                    
+                        
+                </div>
+                <h1></h1>
+                <div class="del">
+                    <button type="button" class="delete-form-btn btn btn-danger">Delete</button> 
+                </div>
+            </div>
+    
+        </script>
+    
+    
+        
+        <script>
+            $(document).ready(function() {
+    
+                var totalForms = $('#id_{{ formset.prefix }}-TOTAL_FORMS');
+    
+                var formsetContainer = $('#formset-container'); 
+    
+                var emptyFormTemplate = $('#empty-form-template').text(); 
+    
+            
+    
+                // Hàm update lại index của form 
+                function updateElementIdx(el, prefix, index) {
+                    var idRegex = new RegExp('(' + prefix + '-\\d+)'); 
+    
+                    var replacement = prefix + '-' + index; 
+    
+                    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(idRegex, replacement)); 
+    
+                    if (el.id) el.id = el.id.replace(idRegex, replacement); 
+    
+                    if (el.name) el.name = el.name.replace(idRegex, replacement)
+    
+                }
+    
+                // Add form button 
+    
+                $('#add-form-btn').click(function() {
+    
+                    var newForm = emptyFormTemplate.replace(/__prefix__/g, totalForms.val()); 
+                    formsetContainer.append(newForm); 
+    
+                    totalForms.val(parseInt(totalForms.val()) + 1); 
+    
+                }); 
+    
+                // Delete form button 
+                formsetContainer.on('click', '.delete-form-btn', function() {
+                    $(this).closest('.card').remove();
+                    var forms = formsetContainer.find('.card'); 
+    
+                    $('#id_{{ formset.prefix }}-TOTAL_FORMS').val(forms.length); 
+    
+                    for (var i = 0, formCount = forms.length; i < formCount; i ++) {
+                        updateElementIdx(forms.get(i), '{{ formset.prefix }}', i); 
+                    }
+    
+    
+                });
+    
+            }); 
+    
+        </script>
+    </div>
+    </body>
+  </html>
+{% endblock %}

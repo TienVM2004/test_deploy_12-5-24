@@ -1,0 +1,28 @@
+{% extends "base1.html" %}
+{% load static %}
+
+{% block title %}New StudySet{% endblock %}
+
+{% block content %}
+  
+  <!DOCTYPE html>
+  <html lang="en">
+    <head></head>
+    <body>
+      <link rel="stylesheet" href="{% static 'styles\general\general.css' %}" />
+      <link rel="stylesheet" href="{% static 'styles\new_studyset\new_studyset.css' %}" />
+      <div class="outer_most">
+      <h1 class="header">Create New StudySet</h1>
+
+      <div class="card">
+        <form action="{% url 'flashcard:new_studyset' %}" method="post" class="form-style">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" id="SaveandAddButton" name="saveandadd" value="Save and Add Card" class="btn save_button">
+        </form>
+      </div>
+    
+    </div>
+    </body>
+  </html>
+{% endblock %}
