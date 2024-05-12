@@ -98,8 +98,8 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ['http://deploy-test-c2bj.onrender.com']
-CORS_ORIGIN_WHITELIST = ['https://deploy-test-c2bj.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://anglais.onrender.com']
+CORS_ORIGIN_WHITELIST = ['https://anglais.onrender.com']
 
 
 # Password validation
